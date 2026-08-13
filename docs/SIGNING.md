@@ -26,4 +26,7 @@ signify -V -p mbsd-release.pub -m release/mbsd-overlay.itb -x release/mbsd-overl
 ```
 
 ## Key Rotation Protocol
-In the event of key compromise, a new keypair must be generated, and all downstream orchestrators (`omnia-playbook`) must be updated to trust the new public key. Revocation is handled explicitly by replacing the trusted public key on the provisioning servers.
+In the event of key compromise, the following operational procedure must be strictly followed:
+1. **Quorum Approval:** Generation of a new root keypair requires explicit `SA/MIO` owner approval via a `TRAE:` prefixed commit.
+2. **Out-of-Band Distribution:** The new trusted public key must be distributed to all `omnia-playbook` provisioning servers out-of-band (i.e., not via the compromised channel).
+3. **Implicit Revocation Semantic:** Active MBSD nodes running Model B (local SquashFS) will continue to boot and operate with the old firmware. Because local flashing is a human-gated operation on this hardware, a node cannot automatically detect a compromised key until a human initiates a re-image sequence. The old key is considered revoked purely by its removal from the trusted provisioning servers.
