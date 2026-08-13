@@ -16,7 +16,16 @@ echo "[*] Fetching /proc/mtd layout..."
 ssh -o StrictHostKeyChecking=no root@$ROUTER_IP "cat /proc/mtd" > "$BACKUP_DIR/proc_mtd.txt"
 
 if [ ! -s "$BACKUP_DIR/proc_mtd.txt" ]; then
-    echo "[!] Failed to connect or read /proc/mtd. Ensure the router is booted into OpenWrt and reachable."
+    echo "⚠️ WARNING: GL-MT3000 requires 3.3V TTL logic. 5V will DESTROY the MT7981 SoC. ⚠️"
+    echo "[*] Ensure you are connected to the internal 4-pin header via 3.3V UART (115200 8N1)"
+    echo "[*] Instructions:"
+    echo "1. Power cycle the router and press '0' or 'Escape' rapidly to catch the U-Boot prompt."
+    echo "2. Run 'printenv' and save the output."
+    echo "3. Run 'bdinfo' and save the output."
+    echo "4. Run 'fdt print' and save the output."
+    echo "---"
+    echo "Note: ATF (BL31) is NOT interruptible. U-Boot is BL33."
+    echo "Note: Stock U-Boot lacks bootefi. We will target FIT images via 'bootm'."
     exit 1
 fi
 

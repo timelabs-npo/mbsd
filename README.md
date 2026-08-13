@@ -1,31 +1,31 @@
-## MBSD: Minimal OpenBSD Port for MediaTek Filogic MT7981
+## MBSD: Immutable Security Overlay for MediaTek Filogic MT7981
 
 **Status:** Alpha / Conceptual Stage (WIP)  
 **Target Hardware:** GL.iNet GL-MT3000 ("Beryl AX")  
-**Base OS:** OpenBSD 7.9-current (arm64)  
+**Base BSP:** OpenWrt (Kernel 5.4+ / MT7981 Mainline)
 
-MBSD is an experimental, minimalist OpenBSD port tailored specifically for the MediaTek Filogic MT7981 SoC. The goal of the project is to provide a security-hardened, immutable base operating system for edge nodes within the Timelabs infrastructure, moving away from traditional Linux-based router distributions.
+MBSD is an experimental, security-hardened overlay designed to run on top of the battle-tested OpenWrt MediaTek BSP. The goal of the project is to provide a strictly immutable, zero-trust execution environment for edge nodes within the Timelabs infrastructure, without sacrificing mainline driver stability for 2.5GbE, Wi-Fi 6, and SPI-NAND flash.
 
 > [!WARNING]
-> **Current Project Status:** This repository is currently a work-in-progress scaffolding. The codebase consists of initial driver stubs and boot configuration scripts. Active development is temporarily blocked pending physical UART access via USB-C adapter to capture raw hardware telemetry and debug the early console initialization.
+> **Current Project Status:** This repository is currently a work-in-progress scaffolding. The architecture relies on pivoting the OpenWrt rootfs into a strictly immutable SquashFS deployment. Active development is temporarily blocked pending physical UART access via 3.3V internal header to verify U-Boot environments and FIT image paths.
 
 ---
 
 ## 🛠 Target Architecture & Boot Flow
 
-Unlike standard Linux/OpenWrt deployments that rely on direct U-Boot to flat-image (`uImage`) kernel handoffs, MBSD follows the standard OpenBSD/arm64 boot protocol via EFI.
+Unlike experimental OpenBSD ports that lack driver support and `bootefi` implementation on stock U-Boot, MBSD leverages the native hardware boot path using Flattened Image Trees (FIT, `.itb`).
 
 ```text
-[Power On] → [ATF (BL2)] → [U-Boot / FIP] → [U-Boot 'bootefi'] → [Loads BOOTAA64.EFI] → [Launches bsd Kernel]
+[Power On] → [BootROM] → [BL2 (DDR Init)] → [ATF (BL31)] → [U-Boot (BL33)] → [bootm FIT Image] → [OpenWrt Kernel + Immutable SquashFS]
 ```
 
 ### 🏛 Enterprise Architectural Specification
 
-**Storage Tiering & State Retention**  
-MBSD enforces a rigorous partition between cryptographic immutability and runtime state execution. The base root filesystem (`/`) is mounted explicitly via `mount_rd(4)` as a strictly read-only RAMDISK block. All persistent state transitions are offloaded to isolated memory-backed tiers, ensuring that power-loss events result in a mathematically pure state wipe. 
+**Immutable Overlay (SquashFS)**  
+MBSD enforces a rigorous partition between cryptographic immutability and runtime state execution. By discarding OpenWrt's default JFFS2 overlay (`overlayfs`), the base root filesystem (`/`) is mounted explicitly as a strictly read-only SquashFS block. All persistent state transitions are offloaded to isolated memory-backed tiers, ensuring that power-loss events result in a mathematically pure state wipe. 
 
 **Deterministic Deployment & Threat Modeling**  
-Traditional Linux edge distributions (e.g., OpenWrt) fall victim to "configuration drift" and runtime mutation, presenting an unacceptable attack surface for critical infrastructure. MBSD eliminates this threat vector through absolute determinism: configurations cannot be written to disk. The `sysctl(8)` parameters, network interface assignments, and routing daemons are injected deterministically at boot through cryptographically signed orchestration layers.
+Traditional Linux edge distributions fall victim to "configuration drift" and runtime mutation, presenting an unacceptable attack surface for critical infrastructure. MBSD eliminates this threat vector through absolute determinism: configurations cannot be written to disk. The `sysctl` parameters, network interface assignments, and routing daemons are injected deterministically at boot through cryptographically signed orchestration layers.
 
 ---
 
@@ -41,18 +41,18 @@ The project architecture relies on three primary subsystems (currently in design
 
 ## ⚙️ Build System & Finalization (Deployment Pipeline)
 
-**This repository is protected as a strictly "Vanilla-Compatible" human work artifact.** The raw source code is fully readable and editable. All firmware quantization (stripping, LZMA2 minification, and dictionary compression) is handled as a separate deployment stage via the top-level `Makefile`.
+**This repository is protected as a strictly "Vanilla-Compatible" human work artifact.** The raw source code and configuration definitions are fully readable and editable. All firmware quantization (ImageBuilder invocation, artifact stripping, and SquashFS compression) is handled as a separate deployment stage via the top-level `Makefile`.
 
-*   `make vanilla`: Compiles the human-readable C source into standard OpenBSD ELF binaries inside `build/`.
-*   `make quantize`: Invokes the `scripts/quantize_firmware.sh` pipeline on the intermediate binaries.
-*   `make release`: Executes the full end-to-end pipeline, outputting the immutable deployment payload to `release/bsd.rd.quantized`.
+*   `make vanilla`: Generates the raw OpenWrt config artifacts and overlay structures inside `build/`.
+*   `make quantize`: Invokes the OpenWrt ImageBuilder to strip the artifacts and compress them into the immutable SquashFS payload.
+*   `make release`: Executes the full end-to-end pipeline, outputting the immutable deployment FIT payload to `release/mbsd-overlay.itb`.
 *   `make clean`: Purges the `build/` and `release/` directories, restoring the pristine vanilla state.
 
 ---
 
 ## 🚀 Next-Gen Roadmap & TODO Pipeline
 
-*   `[ ]` **Multi-Kernel Evaluation:** Research NetBSD visualization vectors and alternative monolithic kerneling methods for resource-constrained MediaTek environments.
+*   `[ ]` **OpenWrt ImageBuilder Integration:** Automate the pulling of the MT7981 SDK to wrap the MBSD overlay around the stock kernel.
 *   `[ ]` **Autonomous Lifecycle Execution:** Architecture design for completely deleting the "human layer" in edge-node provisioning, deployment, and failure recovery.
-*   `[ ]` **Firmware Footprint Quantization:** Implement advanced static compilation and asset quantization techniques to reduce the overall memory and flash footprint of the MBSD base image.
-*   `[ ]` **Cognitive Assembly Onboarding:** Teach AGY (Autonomous General Intelligence/Agents) frameworks how to programmatically compile, build, and orchestrate MBSD nodes directly from bare-metal specifications.
+*   `[ ]` **Firmware Footprint Quantization:** Implement advanced package stripping and asset quantization techniques to reduce the overall memory and flash footprint of the MBSD SquashFS image.
+*   `[ ]` **Cognitive Assembly Onboarding:** Teach AGY (Autonomous General Intelligence/Agents) frameworks how to programmatically compile, build, and orchestrate MBSD nodes directly from ImageBuilder specifications.
