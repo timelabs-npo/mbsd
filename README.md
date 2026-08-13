@@ -2,12 +2,12 @@
 
 **Status:** Alpha / Conceptual Stage (WIP)  
 **Target Hardware:** GL.iNet GL-MT3000 ("Beryl AX")  
-**Base BSP:** OpenWrt (Kernel 5.4+ / MT7981 Mainline)
+**Base BSP:** OpenWrt 23.05.4 (Kernel 5.15 / MT7981 Mainline)
 
 MBSD is an experimental, security-hardened overlay designed to run on top of the battle-tested OpenWrt MediaTek BSP. The goal of the project is to provide a strictly immutable, zero-trust execution environment for edge nodes within the Timelabs infrastructure, without sacrificing mainline driver stability for 2.5GbE, Wi-Fi 6, and SPI-NAND flash.
 
 > [!WARNING]
-> **Current Project Status:** This repository is currently a work-in-progress scaffolding. The architecture relies on pivoting the OpenWrt rootfs into a strictly immutable SquashFS deployment. Active development is temporarily blocked pending physical UART access via 3.3V internal header to verify U-Boot environments and FIT image paths.
+> **Current Project Status:** This repository is currently a work-in-progress scaffolding. The architecture relies on pivoting the OpenWrt rootfs into a strictly immutable SquashFS deployment. Firmware can be loaded via the U-Boot Web Recovery interface (Ethernet, `192.168.1.1`) or via 3.3V UART serial console.
 
 ---
 

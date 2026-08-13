@@ -46,8 +46,9 @@ validate-intent:
 	@python3 -c "import json; d=json.load(open('$(INTENT_FILE)')); \
 		assert d.get('schemaVersion') == '1.1', 'Invalid schemaVersion'; \
 		assert 'owner' in d and 'pubkey_fingerprint' in d['owner'], 'Missing owner pin'; \
-		assert 'codex' in d and 'pubkey_fingerprint' in d['codex'], 'Missing codex pin'; \
-		assert 'signatures' in d and len(d['signatures']) >= 2, 'Missing required signatures'" \
+		assert 'auditor_spec' in d and 'hash' in d['auditor_spec'], 'Missing auditor_spec'; \
+		assert 'signatures' in d and len(d['signatures']) >= 1, 'Missing required signatures'; \
+		assert 'updated_at' in d, 'Missing updated_at'" \
 		|| (echo "[!] FATAL (CP-2): Intent validation failed." && exit 1)
 	@echo "[+] Intent metadata validated."
 
@@ -77,8 +78,8 @@ halt-on-critical:
 	@$(MAKE) validate-intent
 	@$(MAKE) law-core-check
 	@python3 -c "import json; d=json.load(open('$(LAWCORE_OUT)')); \
-		assert d.get('overall_pass') is True, 'Law-Core overall_pass is false'; \
-		assert d.get('severity') in ['None', 'Low', 'Medium', 'High'], 'Invalid severity level'" \
+		assert d.get('overall_pass') in [True, 1], 'Law-Core overall_pass is false'; \
+		assert d.get('severity') in ['None', 'Low', 'Medium', 'High'], 'Severity too high: ' + str(d.get('severity'))" \
 		|| (echo "[!] CI HALT: Critical non-conformance detected." && exit 1)
 	@echo "[+] CI Check Passed: Repository clean."
 

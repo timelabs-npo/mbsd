@@ -1,23 +1,21 @@
 {
   "spec_version": "1.1",
   "clause_results": {
-    "§1_authority_ladder":        1,
-    "§2_amendment_lock":          1,
-    "§3_halt_semantics":          1,
-    "§4_newton_gate":             1,
-    "§5_poc_families":            1,
-    "§6_operating_rules":         1,
-    "§7_evidence_tiers":          1,
-    "§8_public_reporting":        1,
-    "§9_severity_triggers":       1,
-    "§10_repo_fit_profile":       1
+    "§1_authority_ladder": true,
+    "§2_amendment_lock": true,
+    "§3_halt_semantics": true,
+    "§4_newton_gate": true,
+    "§5_poc_families": true,
+    "§6_operating_rules": true,
+    "§7_evidence_tiers": true,
+    "§8_public_reporting": true,
+    "§9_severity_triggers": true,
+    "§10_repo_fit_profile": true
   },
-  "overall_pass":    1,
-  "severity":        "None",
-  "evidence_hashes": [
-    "sha256:aa6f70a42817624cc7805e21c749be949b4db4daf762f41c2c57990637a5291c",
-    "sha256:e09ba3c30fc85181d2ad007992e92d1abc1479e8b54e27ea5eaf39a55f116667",
-    "sha256:3c443f7e7ae2d93e56920150eea6f4cba330dfc2ecda03e22d12621be1a9c0c2"
-  ],
-  "timestamp": "2026-08-13T19:55:12Z"
+  "overall_pass": false,
+  "severity": "Fatal",
+  "failed_clauses": ["CP-3"],
+  "evidence_hashes": ["sha256:aa6f70a42817624cc7805e21c749be949b4db4daf762f41c2c57990637a5291c", "sha256:9b8b5e6f71766a79044212b959fa0f3b270261fc1cfa7a3f1c1ef73861f6567e", "sha256:3c443f7e7ae2d93e56920150eea6f4cba330dfc2ecda03e22d12621be1a9c0c2"],
+  "evaluator": "law-core-posix-stub-v1.1",
+  "timestamp": "2026-08-13T22:32:48Z"
 }

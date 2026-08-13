@@ -1,18 +1,27 @@
 {
     "schemaVersion": "1.1",
     "project": "mbsd",
-    "owner": {
-        "id": "SA/MIO",
-        "pubkey_fingerprint": "8d3e2f1a6c4b9d0e5f7a2c1b4e3d9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d"
-    },
-    "codex": {
-        "id": "Newton-Class Codex",
-        "pubkey_fingerprint": "codex_9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d8d3e2f1a6c4b9d0e5f7a2c1b"
-    },
     "auditor_spec": {
         "version": "1.1",
         "hash": "aa6f70a42817624cc7805e21c749be949b4db4daf762f41c2c57990637a5291c"
     },
+    "owner": {
+        "id": "SA/MIO",
+        "pubkey_fingerprint": "8d3e2f1a6c4b9d0e5f7a2c1b4e3d9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d"
+    },
+    "signatures": [
+        {
+            "role": "Owner",
+            "sig": "",
+            "algo": "signify-ed25519"
+        },
+        {
+            "role": "Codex",
+            "sig": "",
+            "algo": "signify-ed25519"
+        }
+    ],
+    "updated_at": "2026-08-14T00:00:00Z",
     "hardware": {
         "soc": "MediaTek MT7981",
         "board": "GL.iNet GL-MT3000",
@@ -48,17 +57,5 @@
             "State engine (blueshoes) initializes in RAM."
         ],
         "bootSeconds": 15
-    },
-    "signatures": [
-        {
-            "role": "Owner",
-            "pubkey_fingerprint": "8d3e2f1a6c4b9d0e5f7a2c1b4e3d9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d",
-            "signature": ""
-        },
-        {
-            "role": "Codex",
-            "pubkey_fingerprint": "codex_9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d8d3e2f1a6c4b9d0e5f7a2c1b",
-            "signature": ""
-        }
-    ]
+    }
 }

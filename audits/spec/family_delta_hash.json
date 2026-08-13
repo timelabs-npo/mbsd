@@ -1,25 +1,15 @@
 {
   "family": "DELTA-HASH",
-  "inventory": [
-    {
-      "name": "TPM 2.0 PCR Hash Extensions (TCG Specification)",
-      "citation": "Trusted Computing Group, TPM 2.0 Library Specification (2019)"
-    },
-    {
-      "name": "Certificate Transparency Logs (RFC 6962 / RFC 9162 - Merkle Trees)",
-      "citation": "Laurie et al., IETF RFC 6962, DOI: 10.17487/RFC6962"
-    },
-    {
-      "name": "dm-verity (Linux Device-Mapper dm-verity)",
-      "citation": "Linux Kernel Documentation, Documentation/admin-guide/device-mapper/verity.rst"
-    },
-    {
-      "name": "Git Merkle DAG Architecture",
-      "citation": "Torvalds & Hamano, Git Version Control System (2005)"
-    },
-    {
-      "name": "Rekor (Sigstore Public Transparency Log)",
-      "citation": "Sigstore Architecture Documentation, Linux Foundation (2021)"
-    }
-  ]
+  "version": "1.1",
+  "prior_art": [
+    {"name": "TPM 2.0 PCR Extensions", "citation": "TCG TPM 2.0 Library Specification (2019)", "newton_failure": "F1 (lacks forward-cone sub-membership proofs), F2 (no automated slashing), F3 (linear replay)"},
+    {"name": "Certificate Transparency", "citation": "RFC 6962 / RFC 9162, DOI: 10.17487/RFC6962", "newton_failure": "F1 (consistency proof complexity), F2 (post-hoc detection), F3 (gossip overhead)"},
+    {"name": "dm-verity", "citation": "Linux Kernel Documentation admin-guide/device-mapper/verity.rst", "newton_failure": "F1 (static block verification only), F2 (no cryptographic attacker attribution), F3 (signed cmdline)"},
+    {"name": "Git Merkle DAG", "citation": "Torvalds & Hamano (2005)", "newton_failure": "F1 (arbitrary branching allowed), F2 (signatures do not bind hardware EEPROM), F3 (linear log traversal)"},
+    {"name": "Rekor Transparency Log", "citation": "Sigstore Linux Foundation (2021)", "newton_failure": "F1 (requires online API), F2 (no router hardware enforcement), F3 (linear search indexing)"}
+  ],
+  "invariants": {
+    "dual_build": ["mt7981_mips64_musl", "aws_nitro_eif"],
+    "max_proof_size_bytes": 1024
+  }
 }

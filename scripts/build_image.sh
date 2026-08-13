@@ -47,15 +47,28 @@ fi
 
 echo "[*] Building immutable SquashFS image..."
 cd "$IB_DIR"
-PACKAGES="kmod-mt7981-firmware kmod-mt7915e wpad-basic-mbedtls -luci -uhttpd -rpcd"
+# Minification: aggressively remove unnecessary packages to shrink the image.
+# We remove LuCI, IPv6, PPP, USB support, and standard Wi-Fi utilities if not needed.
+# Note: kmod-mt7981-firmware and wpad-basic-mbedtls are required for hardware function.
+PACKAGES="kmod-mt7981-firmware kmod-mt7915e wpad-basic-mbedtls \
+-luci -uhttpd -rpcd \
+-ppp -ppp-mod-pppoe -kmod-usb-core -kmod-usb2 -kmod-usb3 \
+-ip6tables -odhcp6c -kmod-ipv6 -ip6tables-mod-nat"
+
 make image PROFILE="$PROFILE" PACKAGES="$PACKAGES" FILES="$SRC_DIR"
 
+# MT7981 uses .itb (Flattened Image Tree) format which is compatible with the U-Boot Web UI recovery.
 FIRMWARE_FILE=$(find "$IB_DIR/bin/targets/mediatek/filogic" -type f \( -name "*${PROFILE}*sysupgrade.itb" -o -name "*${PROFILE}*sysupgrade.bin" \) | head -n 1)
 
 if [ -z "$FIRMWARE_FILE" ] || [ ! -f "$FIRMWARE_FILE" ]; then
-    echo "[!] FATAL: Build failed to produce sysupgrade artifact."
+    echo "[!] FATAL: Build failed to produce sysupgrade/ITB artifact."
     exit 1
 fi
 
+# Primary overlay
 cp "$FIRMWARE_FILE" "$RELEASE_DIR/mbsd-overlay.itb"
+# Explicit U-Boot Web Recovery Variant
+cp "$FIRMWARE_FILE" "$RELEASE_DIR/mbsd-uboot-recovery.itb"
+
 echo "[+] Immutable release artifact generated at: $RELEASE_DIR/mbsd-overlay.itb"
+echo "[+] U-Boot Web Recovery artifact generated at: $RELEASE_DIR/mbsd-uboot-recovery.itb"

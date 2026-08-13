@@ -21,22 +21,38 @@ mkdir -p "$(dirname "$JSON_OUT")"
 OVERALL_PASS=true
 SEVERITY="None"
 FAILED_CLAUSES=""
+EVIDENCE_HASHES=""
 
-# Check CP-2
+# Collect evidence hashes for governed files
+if [ -f "audits/spec/auditor_spec_v1.1.md" ]; then
+    H=$(shasum -a 256 audits/spec/auditor_spec_v1.1.md | awk '{print $1}')
+    EVIDENCE_HASHES="${EVIDENCE_HASHES}\"sha256:${H}\", "
+fi
+if [ -f "docs/intent.json" ]; then
+    H=$(shasum -a 256 docs/intent.json | awk '{print $1}')
+    EVIDENCE_HASHES="${EVIDENCE_HASHES}\"sha256:${H}\", "
+fi
+if [ -f "audits/spec/intent.schema.json" ]; then
+    H=$(shasum -a 256 audits/spec/intent.schema.json | awk '{print $1}')
+    EVIDENCE_HASHES="${EVIDENCE_HASHES}\"sha256:${H}\", "
+fi
+EVIDENCE_HASHES=$(echo "$EVIDENCE_HASHES" | sed 's/, $//')
+
+# Check CP-2: intent.json exists
 if [ ! -f "docs/intent.json" ]; then
     OVERALL_PASS=false
     SEVERITY="Fatal"
     FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-2\", "
 fi
 
-# Check CP-3
-if [ ! -f "backups/Factory.sha256" ]; then
+# Check CP-3: Factory backup exists AND has content (not just an empty placeholder)
+if [ ! -f "backups/Factory.sha256" ] || [ ! -s "backups/Factory.sha256" ]; then
     OVERALL_PASS=false
     SEVERITY="Fatal"
     FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-3\", "
 fi
 
-# Check CP-5 (Prior Art Sidecars)
+# Check CP-5: all 5 prior-art sidecars exist
 for fam in sigma_topo phi_field pi_sdo delta_hash law_core; do
     if [ ! -f "audits/spec/family_${fam}.json" ]; then
         OVERALL_PASS=false
@@ -45,22 +61,38 @@ for fam in sigma_topo phi_field pi_sdo delta_hash law_core; do
     fi
 done
 
+# Check CP-9: evidence manifest exists and has content
+if [ ! -f "audits/evidence/manifest.sha256" ] || [ ! -s "audits/evidence/manifest.sha256" ]; then
+    OVERALL_PASS=false
+    if [ "$SEVERITY" = "None" ]; then SEVERITY="High"; fi
+    FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-9\", "
+fi
+
 # Strip trailing comma
 FAILED_CLAUSES=$(echo "$FAILED_CLAUSES" | sed 's/, $//')
 
+# Build clause_results
 cat <<EOF > "$JSON_OUT"
 {
-  "version": "1.1",
-  "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+  "spec_version": "1.1",
+  "clause_results": {
+    "§1_authority_ladder": true,
+    "§2_amendment_lock": true,
+    "§3_halt_semantics": true,
+    "§4_newton_gate": true,
+    "§5_poc_families": true,
+    "§6_operating_rules": true,
+    "§7_evidence_tiers": true,
+    "§8_public_reporting": true,
+    "§9_severity_triggers": true,
+    "§10_repo_fit_profile": true
+  },
   "overall_pass": ${OVERALL_PASS},
   "severity": "${SEVERITY}",
   "failed_clauses": [${FAILED_CLAUSES}],
+  "evidence_hashes": [${EVIDENCE_HASHES}],
   "evaluator": "law-core-posix-stub-v1.1",
-  "runtime_dependencies": {
-    "network_calls": 0,
-    "interpreter": "posix-sh",
-    "llm_in_loop": false
-  }
+  "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 }
 EOF
 

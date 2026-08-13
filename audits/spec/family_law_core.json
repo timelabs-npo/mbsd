@@ -1,25 +1,16 @@
 {
   "family": "LAW-CORE",
-  "inventory": [
-    {
-      "name": "OPA (Open Policy Agent - Rego Engine)",
-      "citation": "Open Policy Agent Documentation, CNCF Graduated Project"
-    },
-    {
-      "name": "AWS IAM Access Analyzer (Z3 SMT Solver for Policies)",
-      "citation": "Backes et al., IEEE S&P 2018 (Zelkova / Tiros), DOI: 10.1109/SP.2018.00054"
-    },
-    {
-      "name": "SELinux / seedit Policy Compilers",
-      "citation": "Loscocco & Smalley, NSA Technical Report (2001)"
-    },
-    {
-      "name": "Coq / Lean 4 Formal Verification Systems",
-      "citation": "The Coq Development Team (Inria) / de Moura et al., CADE 2021 (Lean 4)"
-    },
-    {
-      "name": "Nix / Guix Functional Package Managers",
-      "citation": "Dolstra, PhD Thesis, Utrecht University (2006)"
-    }
-  ]
+  "version": "1.1",
+  "prior_art": [
+    {"name": "Open Policy Agent (OPA/Rego)", "citation": "CNCF Graduated Project (2021)", "newton_failure": "F1 (undefined loop paths), F2 (Go runtime interpreter memory overhead), F3 (linear document latency)"},
+    {"name": "AWS IAM Access Analyzer (Z3)", "citation": "Backes et al., IEEE S&P 2018, DOI: 10.1109/SP.2018.00054", "newton_failure": "F1 (NP-complete SMT timeouts), F2 (cloud network API dependency), F3 (closed SaaS)"},
+    {"name": "SELinux Policy Compiler", "citation": "Loscocco & Smalley, NSA Tech Report (2001)", "newton_failure": "F1 (rule explosion / over-permissiveness), F2 (no cryptographic exportable proof), F3 (heavy toolchain)"},
+    {"name": "Coq / Lean 4 Verification", "citation": "Inria / de Moura et al., CADE 2021", "newton_failure": "F2 (cannot execute natively on MIPS64 OpenWrt), F3 (interactive human proof loops)"},
+    {"name": "Nix / Guix Pure Packaging", "citation": "Dolstra, PhD Thesis, Utrecht Univ (2006)", "newton_failure": "F1 (package purity lacks operational runtime verification), F2 (no slashing hooks), F3 (disk/RAM overhead)"}
+  ],
+  "invariants": {
+    "zero_dependencies": true,
+    "runtime_interpreter": false,
+    "llm_in_decision_path": false
+  }
 }

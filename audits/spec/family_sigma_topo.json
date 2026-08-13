@@ -1,25 +1,15 @@
 {
   "family": "SIGMA-TOPO",
-  "inventory": [
-    {
-      "name": "OpenFlow / NOX / POX",
-      "citation": "McKeown et al., ACM CCR 2008, DOI: 10.1145/1355734.1355746"
-    },
-    {
-      "name": "BGP Route Flap Damping (RFC 2439 / RFC 7454)",
-      "citation": "Villamizar et al., IETF RFC 2439, DOI: 10.17487/RFC2439"
-    },
-    {
-      "name": "NetKAT / Frenetic SDN Verification",
-      "citation": "Anderson et al., ACM POPL 2014, DOI: 10.1145/2535838.2535862"
-    },
-    {
-      "name": "Spanning Tree Protocol (IEEE 802.1D / 802.1w RSTP)",
-      "citation": "IEEE Std 802.1D-2004, DOI: 10.1109/IEEESTD.2004.94569"
-    },
-    {
-      "name": "TRILL (Transparent Interconnection of Lots of Links - RFC 6325)",
-      "citation": "Perlman et al., IETF RFC 6325, DOI: 10.17487/RFC6325"
-    }
-  ]
+  "version": "1.1",
+  "prior_art": [
+    {"name": "OpenFlow/NOX", "citation": "McKeown et al., ACM CCR 2008, DOI: 10.1145/1355734.1355746", "newton_failure": "F1 (no formal algebra), F2 (no cryptographic bond), F3 (linear controller state)"},
+    {"name": "BGP Route Flap Damping", "citation": "RFC 2439 / RFC 7454, DOI: 10.17487/RFC2439", "newton_failure": "F1 (heuristic decay), F2 (no cryptographic proof), F3 (state explosion)"},
+    {"name": "NetKAT / Frenetic", "citation": "Anderson et al., ACM POPL 2014, DOI: 10.1145/2535838.2535862", "newton_failure": "F2 (static verification only, no hardware slashing), F3 (exponential translation)"},
+    {"name": "STP / RSTP", "citation": "IEEE Std 802.1D-2004, DOI: 10.1109/IEEESTD.2004.94569", "newton_failure": "F1 (unverified topology cycles), F2 (no sovereign tickets), F3 (slow convergence)"},
+    {"name": "TRILL", "citation": "RFC 6325, DOI: 10.17487/RFC6325", "newton_failure": "F1 (lacks machine checks), F2 (no economic bond), F3 (O(N^2) link state)"}
+  ],
+  "invariants": {
+    "max_blast_radius": "floor(sqrt(|V|))",
+    "operators": ["join", "split", "quarantine", "amputate", "bridge"]
+  }
 }

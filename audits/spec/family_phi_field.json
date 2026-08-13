@@ -1,25 +1,15 @@
 {
   "family": "PHI-FIELD",
-  "inventory": [
-    {
-      "name": "Self-Stabilizing Distributed Systems (Dijkstra 1974)",
-      "citation": "E. W. Dijkstra, CACM 1974, DOI: 10.1145/361082.361093"
-    },
-    {
-      "name": "Kubernetes Control Plane / Node Controller",
-      "citation": "Burns et al., ACM Queue 2016, DOI: 10.1145/2898442.2898444"
-    },
-    {
-      "name": "Cisco SON / Self-Organizing Networks (3GPP TS 32.500)",
-      "citation": "3GPP Technical Specification 32.500, Rel 8 (2011)"
-    },
-    {
-      "name": "Babel Routing Protocol (RFC 8966 - Distance-Vector Invariants)",
-      "citation": "Chroboczek & Schinazi, IETF RFC 8966, DOI: 10.17487/RFC8966"
-    },
-    {
-      "name": "Consul Autopilot (HashiCorp Deadman Switches)",
-      "citation": "HashiCorp Engineering Whitepaper, Consul Autopilot Architecture (2017)"
-    }
-  ]
+  "version": "1.1",
+  "prior_art": [
+    {"name": "Dijkstra Self-Stabilization", "citation": "CACM 1974, DOI: 10.1145/361082.361093", "newton_failure": "F1 (no automated proofs for modern graphs), F2 (no crypto identity), F3 (diameter-scale steps)"},
+    {"name": "Kubernetes Node Controller", "citation": "Burns et al., ACM Queue 2016, DOI: 10.1145/2898442.2898444", "newton_failure": "F1 (non-deterministic sync loops), F2 (central API server), F3 (etcd Raft scaling)"},
+    {"name": "3GPP Self-Organizing Networks", "citation": "3GPP TS 32.500, Rel 8 (2011)", "newton_failure": "F1 (heuristic optimization), F2 (closed vendor ecosystem), F3 (centralized compute)"},
+    {"name": "Babel Invariants", "citation": "RFC 8966, DOI: 10.17487/RFC8966", "newton_failure": "F1 (multi-metric health unproven), F2 (HMAC lacks stake bonding), F3 (adversarial route churn)"},
+    {"name": "Consul Autopilot", "citation": "HashiCorp Whitepaper (2017)", "newton_failure": "F1 (heuristic deadman checks), F2 (no ZK breach proofs), F3 (full mesh gossip limits)"}
+  ],
+  "invariants": {
+    "lyapunov_monotonicity": "dL/dt <= -lambda * L(G)",
+    "detection_latency_ms": 100
+  }
 }

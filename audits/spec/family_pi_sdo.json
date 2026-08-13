@@ -1,25 +1,15 @@
 {
   "family": "PI-SDO",
-  "inventory": [
-    {
-      "name": "Ethereum Casper FFG (CBC Casper)",
-      "citation": "Buterin & Griffith, arXiv:1710.09437, 2017"
-    },
-    {
-      "name": "Lightning Network Hashed Time-Locked Contracts (HTLCs)",
-      "citation": "Poon & Dryja, Lightning Network Whitepaper (2016)"
-    },
-    {
-      "name": "Tendermint BFT Slashing Protocols",
-      "citation": "Buchman, Kwon, & Milosevic, arXiv:1807.04938, 2018"
-    },
-    {
-      "name": "Optimistic Rollup Fraud Proofs (Arbitrum / Optimism)",
-      "citation": "Kalodner et al., USENIX Security 2018 (Arbitrum Nitro)"
-    },
-    {
-      "name": "UMA Optimistic Oracle",
-      "citation": "UMA Protocol Whitepaper (2020)"
-    }
-  ]
+  "version": "1.1",
+  "prior_art": [
+    {"name": "Casper FFG", "citation": "Buterin & Griffith, arXiv:1710.09437, 2017", "newton_failure": "F1 (liveness under balance attacks), F2 (2/3 epoch delay > 6 blocks), F3 (linear capital lockup)"},
+    {"name": "Lightning HTLC", "citation": "Poon & Dryja, Lightning Network Whitepaper (2016)", "newton_failure": "F1 (flood-and-loot vulnerability), F2 (leaks preimage on-chain), F3 (linear channel lockup)"},
+    {"name": "Tendermint BFT Slashing", "citation": "Buchman et al., arXiv:1807.04938, 2018", "newton_failure": "F1 (header conflict only), F2 (no hardware telemetry proof), F3 (O(N^2) rounds)"},
+    {"name": "Optimistic Fraud Proofs", "citation": "Kalodner et al., USENIX Security 2018", "newton_failure": "F1 (7-day interactive challenge), F2 (censorship/MEV delay), F3 (archival storage)"},
+    {"name": "UMA Optimistic Oracle", "citation": "UMA Protocol Whitepaper (2020)", "newton_failure": "F1 (subjective human voter manipulation), F2 (settlement in hours/days), F3 (token market cap bound)"}
+  ],
+  "invariants": {
+    "slash_settlement_blocks": 6,
+    "min_bond_ratio": 10
+  }
 }

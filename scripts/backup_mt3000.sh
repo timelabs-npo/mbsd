@@ -1,79 +1,59 @@
 #!/bin/bash
-# Backup script for GL.iNet GL-MT3000 ("Beryl AX") SPI-NAND
-# Uses SSH to execute nanddump to safely extract critical partitions with OOB metadata.
+set -euo pipefail
 
 if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <router_ip> [--with-ubi]"
+    echo "Usage: $0 <ROUTER_IP>"
+    echo "Example: $0 192.168.8.1"
     exit 1
 fi
 
 ROUTER_IP="$1"
-WITH_UBI=0
-if [ "$2" == "--with-ubi" ]; then
-    WITH_UBI=1
-fi
+SSH_USER="root"
+BACKUP_DIR="backups"
 
-BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
-echo "=== MBSD Full Firmware Forensics Backup Pipeline ==="
+echo "[*] Connecting to $ROUTER_IP to locate Factory partition..."
+# Identify the mtd block for "factory" or "Factory"
+MTD_LINE=$(ssh -o StrictHostKeyChecking=no "$SSH_USER@$ROUTER_IP" "cat /proc/mtd | grep -i 'factory'") || {
+    echo "[!] FATAL: Could not find 'factory' partition on router."
+    exit 1
+}
 
-# 1. Fetch Partition Table
-ssh -o StrictHostKeyChecking=no root@$ROUTER_IP "cat /proc/mtd" > "$BACKUP_DIR/proc_mtd.txt" 2>/dev/null || true
-
-if [ ! -s "$BACKUP_DIR/proc_mtd.txt" ]; then
-    echo "⚠️ WARNING: GL-MT3000 requires 3.3V TTL logic. 5V will DESTROY the MT7981 SoC. ⚠️"
-    echo "[*] Ensure you are connected to the internal 4-pin header via 3.3V UART (115200 8N1)"
+# Example line: mtd3: 00200000 00020000 "Factory"
+MTD_DEV=$(echo "$MTD_LINE" | awk -F: '{print $1}')
+if [ -z "$MTD_DEV" ]; then
+    echo "[!] FATAL: Failed to parse MTD device from: $MTD_LINE"
     exit 1
 fi
 
-echo "[*] Connected. Found partition table."
+echo "[+] Found Factory partition at /dev/$MTD_DEV"
 
-# Function to safely dump and verify a partition
-dump_and_verify() {
-    PART_NAME=$1
-    MTD_DEV=$(grep -i "$PART_NAME" "$BACKUP_DIR/proc_mtd.txt" | awk -F: '{print $1}')
-    
-    if [ -z "$MTD_DEV" ]; then
-        echo "[!] CRITICAL: Could not find '$PART_NAME' partition in /proc/mtd."
-        exit 1
-    fi
+PASS1="$BACKUP_DIR/Factory_pass1.bin"
+PASS2="$BACKUP_DIR/Factory_pass2.bin"
 
-    echo "[*] Dumping $PART_NAME partition (Pass 1) from /dev/$MTD_DEV..."
-    ssh root@$ROUTER_IP "nanddump -f /tmp/${PART_NAME}_1.bin --bb=skipbad --oob /dev/$MTD_DEV"
-    scp root@$ROUTER_IP:/tmp/${PART_NAME}_1.bin "$BACKUP_DIR/${PART_NAME}_1.bin"
-    shasum -a 256 "$BACKUP_DIR/${PART_NAME}_1.bin" | awk '{print $1}' > "$BACKUP_DIR/${PART_NAME}_1.sha256"
+echo "[*] Starting Pass 1 extraction..."
+ssh -o StrictHostKeyChecking=no "$SSH_USER@$ROUTER_IP" "dd if=/dev/${MTD_DEV}ro 2>/dev/null" > "$PASS1"
 
-    echo "[*] Dumping $PART_NAME partition (Pass 2) from /dev/$MTD_DEV..."
-    ssh root@$ROUTER_IP "nanddump -f /tmp/${PART_NAME}_2.bin --bb=skipbad --oob /dev/$MTD_DEV"
-    scp root@$ROUTER_IP:/tmp/${PART_NAME}_2.bin "$BACKUP_DIR/${PART_NAME}_2.bin"
-    shasum -a 256 "$BACKUP_DIR/${PART_NAME}_2.bin" | awk '{print $1}' > "$BACKUP_DIR/${PART_NAME}_2.sha256"
+echo "[*] Starting Pass 2 extraction (verification)..."
+ssh -o StrictHostKeyChecking=no "$SSH_USER@$ROUTER_IP" "dd if=/dev/${MTD_DEV}ro 2>/dev/null" > "$PASS2"
 
-    echo "[*] Verifying NAND stability for $PART_NAME..."
-    if cmp -s "$BACKUP_DIR/${PART_NAME}_1.sha256" "$BACKUP_DIR/${PART_NAME}_2.sha256"; then
-        echo "[+] VERIFIED: $PART_NAME checksum is stable."
-        mv "$BACKUP_DIR/${PART_NAME}_1.bin" "$BACKUP_DIR/${PART_NAME}.bin"
-        mv "$BACKUP_DIR/${PART_NAME}_1.sha256" "$BACKUP_DIR/${PART_NAME}.sha256"
-        rm "$BACKUP_DIR/${PART_NAME}_2.bin" "$BACKUP_DIR/${PART_NAME}_2.sha256"
-        ssh root@$ROUTER_IP "rm /tmp/${PART_NAME}_1.bin /tmp/${PART_NAME}_2.bin"
-    else
-        echo "[!] FATAL: $PART_NAME read instability detected! Checksums diverge."
-        echo "[!] This indicates a failing NAND cell or physical read error."
-        echo "[!] DO NOT FLASH THIS DEVICE."
-        exit 1
-    fi
-}
+HASH1=$(shasum -a 256 "$PASS1" | awk '{print $1}')
+HASH2=$(shasum -a 256 "$PASS2" | awk '{print $1}')
 
-# 2. Extract Required Partitions Safely
-dump_and_verify "bl2"
-dump_and_verify "fip"
-dump_and_verify "u-boot-env"
-dump_and_verify "factory"
-
-if [ "$WITH_UBI" -eq 1 ]; then
-    echo "[*] --with-ubi flag passed. Dumping entire userland (this will take a while)..."
-    dump_and_verify "ubi"
+if [ "$HASH1" != "$HASH2" ]; then
+    echo "[!] FATAL: Pass 1 and Pass 2 hashes do not match! The NAND read is unstable or data is changing."
+    echo "Pass 1: $HASH1"
+    echo "Pass 2: $HASH2"
+    rm -f "$PASS1" "$PASS2"
+    exit 1
 fi
 
-echo "=== Backup Complete ==="
-echo "Artifacts securely verified and saved to: $BACKUP_DIR"
+echo "[+] Dual-pass validation successful! Hashes match."
+echo "[+] SHA-256: $HASH1"
+
+mv "$PASS1" "$BACKUP_DIR/Factory.bin"
+rm "$PASS2"
+
+echo "$HASH1  Factory.bin" > "$BACKUP_DIR/Factory.sha256"
+echo "[+] Backup saved to $BACKUP_DIR/Factory.bin and manifest written to $BACKUP_DIR/Factory.sha256"
