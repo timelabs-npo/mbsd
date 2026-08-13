@@ -39,6 +39,17 @@ The project architecture relies on three primary subsystems (currently in design
 
 ---
 
+## ⚙️ Build System & Finalization (Deployment Pipeline)
+
+**This repository is protected as a strictly "Vanilla-Compatible" human work artifact.** The raw source code is fully readable and editable. All firmware quantization (stripping, LZMA2 minification, and dictionary compression) is handled as a separate deployment stage via the top-level `Makefile`.
+
+*   `make vanilla`: Compiles the human-readable C source into standard OpenBSD ELF binaries inside `build/`.
+*   `make quantize`: Invokes the `scripts/quantize_firmware.sh` pipeline on the intermediate binaries.
+*   `make release`: Executes the full end-to-end pipeline, outputting the immutable deployment payload to `release/bsd.rd.quantized`.
+*   `make clean`: Purges the `build/` and `release/` directories, restoring the pristine vanilla state.
+
+---
+
 ## 🚀 Next-Gen Roadmap & TODO Pipeline
 
 *   `[ ]` **Multi-Kernel Evaluation:** Research NetBSD visualization vectors and alternative monolithic kerneling methods for resource-constrained MediaTek environments.

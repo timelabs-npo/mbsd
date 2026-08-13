@@ -1,0 +1,6 @@
+# Ignore finalization pipeline directories
+/build/
+/release/
+
+# Ignore Mac OS files
+.DS_Store
