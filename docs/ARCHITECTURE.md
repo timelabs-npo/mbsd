@@ -11,18 +11,16 @@ The MT7981 utilizes SPI-NAND flash (typically 256MB). The memory is highly struc
 - **FIP (U-Boot):** The second-stage loader. GL.iNet heavily customizes this to support their web-recovery UI and UBI container formats.
 - **UBI:** The main persistent storage pool, containing the OS kernel and root filesystem.
 
-**Constraint:** The standard OpenBSD `bsd.rd` (ELF) or `BOOTAA64.EFI` cannot be directly flashed into the UBI partition. The firmware must be packaged as a `sysupgrade.tar` with GL.iNet-specific metadata (`glinet,mt3000-snand`).
+- **Immutable Root:** The base root filesystem is mounted explicitly as a strictly read-only SquashFS block. We explicitly eliminate the OpenWrt `rootfs_data` UBIFS volume to guarantee absolute crypto-state purity. `sysupgrade.tar` with GL.iNet-specific metadata (`glinet,mt3000-snand`).
 
 ### 2. Device Tree (FDT) Dependencies
 The MT7981 requires highly specific FDT declarations for:
 - **Reserved Memory:** Missing or misaligned memory reservations in a handcrafted FDT will cause the kernel to overwrite secure ATF memory or Wi-Fi ring buffers, resulting in an immediate hard lockup.
 - **Interrupt Routing:** GICv3 (Generic Interrupt Controller) must be perfectly mapped to the MT7981's internal bus matrix.
 
-### 3. OpenBSD Integration Strategy
-Due to the lack of native MT7981 support in OpenBSD, MBSD implements:
-1.  **RAM-First Telemetry:** We boot the stock OS into RAM (via TFTP/USB and EFI) purely to capture the live FDT structure generated dynamically by U-Boot.
-2.  **Kernel Minification:** `sys/arch/arm64/conf/MBSD` aggressively strips unused drivers (e.g., PCI, USB, Display) to minimize the attack surface and binary size.
-3.  **FDT Stubs:** `sys/dev/fdt/if_mtg.c` and `mtspi.c` provide the minimal scaffolding required for the OpenBSD kernel to attach to the SoC's Gigabit MAC and SPI-NAND controllers.
+### 3. OpenWrt Integration Strategy
+Rather than compiling an unsupported OpenBSD kernel from scratch, MBSD leverages the **OpenWrt ImageBuilder**. 
+The orchestrator dynamically injects the `blueshoes` state engine binaries and network configurations into the OpenWrt rootfs during the build process. The final `mbsd-overlay.itb` FIT image contains the mainline Linux kernel, the SquashFS overlay, and the Device Tree in a single, signed package ready for `bootm` execution.
 
 ---
 

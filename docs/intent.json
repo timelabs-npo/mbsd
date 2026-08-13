@@ -1,0 +1,29 @@
+{
+    "schemaVersion": "1.0",
+    "project": "mbsd",
+    "hardware": {
+        "soc": "MediaTek MT7981",
+        "board": "GL.iNet GL-MT3000",
+        "flashType": "SPI-NAND",
+        "flashPart": "Macronix MX35LF2GE4AD-Z41"
+    },
+    "boot": {
+        "loader": "U-Boot 2022.07-rc3",
+        "protocol": "FIT/bootm",
+        "loadaddr": "VERIFY_VIA_PRINTENV"
+    },
+    "capabilities": {
+        "network": {
+            "ports": ["2.5GbE WAN", "1GbE LAN"],
+            "wifi": ["MT7976CN 2.4GHz", "MT7976CN 5GHz"]
+        }
+    },
+    "success": {
+        "criteria": [
+            "Kernel boots and mounts SquashFS rootfs.",
+            "Immutable execution verified (no mutable UBIFS volume).",
+            "State engine (blueshoes) initializes in RAM."
+        ],
+        "bootSeconds": 15
+    }
+}

@@ -22,7 +22,7 @@ Unlike experimental OpenBSD ports that lack driver support and `bootefi` impleme
 ### 🏛 Enterprise Architectural Specification
 
 **Immutable Overlay (SquashFS)**  
-MBSD enforces a rigorous partition between cryptographic immutability and runtime state execution. By discarding OpenWrt's default JFFS2 overlay (`overlayfs`), the base root filesystem (`/`) is mounted explicitly as a strictly read-only SquashFS block. All persistent state transitions are offloaded to isolated memory-backed tiers, ensuring that power-loss events result in a mathematically pure state wipe. 
+MBSD enforces a rigorous partition between cryptographic immutability and runtime state execution. By eliminating the OpenWrt default `rootfs_data` UBIFS volume, the base root filesystem (`/`) is mounted explicitly as a strictly read-only SquashFS block. All persistent state transitions are offloaded to isolated memory-backed tiers, ensuring that power-loss events result in a mathematically pure state wipe. 
 
 **Deterministic Deployment & Threat Modeling**  
 Traditional Linux edge distributions fall victim to "configuration drift" and runtime mutation, presenting an unacceptable attack surface for critical infrastructure. MBSD eliminates this threat vector through absolute determinism: configurations cannot be written to disk. The `sysctl` parameters, network interface assignments, and routing daemons are injected deterministically at boot through cryptographically signed orchestration layers.

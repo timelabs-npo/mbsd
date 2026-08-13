@@ -6,7 +6,16 @@
 > The logic level of the MT7981 SoC is strictly **3.3V**. If you connect a 5V TTL adapter, you will permanently destroy the SoC. 
 > You MUST use a verified 3.3V adapter (e.g., CH341/CP2102) with a confirmed 3.3V jumper setting.
 
-## 1. Physical UART Connection
+## 1. MANDATORY FIRST STEP: Factory Forensics
+
+> [!CAUTION]
+> **BEFORE ANY BUILD OR FLASH OPERATION IS PERMITTED TO EXECUTE:**
+> You must dump the `Factory` partition (containing per-unit EEPROM radio calibration data). If this partition is corrupted and you don't have a backup, the router's Wi-Fi is permanently destroyed.
+
+The backup script uses `nanddump` to safely extract this data, bypassing bad blocks and preserving OOB/ECC metadata.
+**Do not proceed to flashing if the Factory dump fails.**
+
+## 2. Physical UART Connection
 1. Open the router casing.
 2. Locate the unpopulated 4-pin through-hole header on the PCB.
 3. Solder standard 2.54mm header pins (or use high-quality test clips).

@@ -1,19 +1,20 @@
 #!/bin/bash
-# GL-MT3000 OpenWrt Flash Backup & U-Boot Audit Script
-# Run this on your host machine to safely dump the router's flash partitions over SSH.
+# Backup script for GL.iNet GL-MT3000 ("Beryl AX") SPI-NAND
+# Uses SSH to execute nanddump to safely extract Factory partitions with OOB metadata.
 
-ROUTER_IP="${1:-192.168.8.1}"
-BACKUP_DIR="mt3000_flash_backup_$(date +%Y%m%d_%H%M%S)"
+if [ -z "$1" ]; then
+    echo "Usage: $0 <router_ip>"
+    exit 1
+fi
 
-echo "=== MBSD: GL-MT3000 Flash Backup & U-Boot Audit ==="
-echo "Target: root@$ROUTER_IP"
-echo "Backup Directory: $BACKUP_DIR"
-
+ROUTER_IP="$1"
+BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
-# 1. Fetch partition layout
-echo "[*] Fetching /proc/mtd layout..."
-ssh -o StrictHostKeyChecking=no root@$ROUTER_IP "cat /proc/mtd" > "$BACKUP_DIR/proc_mtd.txt"
+echo "=== MBSD Factory Forensics Backup Pipeline ==="
+
+# 1. Fetch Partition Table
+ssh -o StrictHostKeyChecking=no root@$ROUTER_IP "cat /proc/mtd" > "$BACKUP_DIR/proc_mtd.txt" 2>/dev/null || true
 
 if [ ! -s "$BACKUP_DIR/proc_mtd.txt" ]; then
     echo "⚠️ WARNING: GL-MT3000 requires 3.3V TTL logic. 5V will DESTROY the MT7981 SoC. ⚠️"
@@ -29,37 +30,31 @@ if [ ! -s "$BACKUP_DIR/proc_mtd.txt" ]; then
     exit 1
 fi
 
-cat "$BACKUP_DIR/proc_mtd.txt"
+echo "[*] Connected. Found partition table."
 
-# 2. Backup critical partitions
-# Typical MT7981 OpenWrt layout:
-# mtd0: bl2, mtd1: u-boot-env, mtd2: Factory, mtd3: fip, mtd4: ubi
-PARTITIONS=("bl2" "u-boot-env" "Factory" "fip" "ubi")
+# 2. Extract Factory Partition Safely
+echo "[*] Locating Factory partition..."
+FACTORY_MTD=$(grep -i "factory" "$BACKUP_DIR/proc_mtd.txt" | awk -F: '{print $1}')
 
-for part_name in "${PARTITIONS[@]}"; do
-    # Find the mtdX device number for the partition
-    MTD_DEV=$(grep -i "\"$part_name\"" "$BACKUP_DIR/proc_mtd.txt" | cut -d: -f1)
-    
-    if [ -n "$MTD_DEV" ]; then
-        echo "[*] Backing up $part_name ($MTD_DEV)..."
-        ssh -o StrictHostKeyChecking=no root@$ROUTER_IP "cat /dev/${MTD_DEV}" > "$BACKUP_DIR/${part_name}.bin"
-    else
-        echo "[-] Partition '$part_name' not found in /proc/mtd. Skipping."
-    fi
-done
-
-# 3. Check U-Boot for EFI/FIT support
-if [ -f "$BACKUP_DIR/fip.bin" ]; then
-    echo "[*] Scanning FIP (U-Boot) for 'bootefi' and 'FIT' strings..."
-    strings "$BACKUP_DIR/fip.bin" | grep -iE 'bootefi|fit' > "$BACKUP_DIR/uboot_capabilities.txt"
-    
-    if grep -qi 'bootefi' "$BACKUP_DIR/uboot_capabilities.txt"; then
-        echo "[+] SUCCESS: 'bootefi' string found in U-Boot! EFI RAM boot should be possible."
-    else
-        echo "[!] WARNING: 'bootefi' string NOT found. U-Boot might not support EFI booting."
-    fi
-else
-    echo "[!] FIP backup failed, cannot check U-Boot capabilities."
+if [ -z "$FACTORY_MTD" ]; then
+    echo "[!] CRITICAL: Could not find 'factory' partition in /proc/mtd."
+    echo "[!] Aborting backup to prevent corruption."
+    exit 1
 fi
 
-echo "[*] Backup complete! Artifacts saved to $BACKUP_DIR"
+echo "[*] Dumping Factory partition via nanddump (--bb=skipbad --oob) from /dev/$FACTORY_MTD..."
+ssh root@$ROUTER_IP "nanddump -f /tmp/factory.bin --bb=skipbad --oob /dev/$FACTORY_MTD"
+scp root@$ROUTER_IP:/tmp/factory.bin "$BACKUP_DIR/factory.bin"
+
+if [ ! -s "$BACKUP_DIR/factory.bin" ]; then
+    echo "[!] CRITICAL: Failed to dump Factory partition! DO NOT FLASH THIS DEVICE."
+    exit 1
+fi
+
+# 3. Generate SHA-256 Checksum
+echo "[*] Verifying Factory partition checksum..."
+shasum -a 256 "$BACKUP_DIR/factory.bin" > "$BACKUP_DIR/factory.bin.sha256"
+cat "$BACKUP_DIR/factory.bin.sha256"
+
+echo "=== Backup Complete ==="
+echo "Artifacts securely saved to: $BACKUP_DIR"

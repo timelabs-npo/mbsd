@@ -1,3 +1,5 @@
+*(This document is archived following the OpenWrt Pivot (ADR-001))*
+
 # Multi-Kernel Evaluation: OpenBSD vs. NetBSD on MediaTek Filogic
 
 This document explores the viability of alternative monolithic and virtualization kernel vectors for the MT7981 architecture, specifically contrasting the current OpenBSD port with theoretical NetBSD adaptations.
