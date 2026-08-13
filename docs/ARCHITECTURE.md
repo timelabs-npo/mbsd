@@ -11,7 +11,8 @@ The MT7981 utilizes SPI-NAND flash (typically 256MB). The memory is highly struc
 - **FIP (U-Boot):** The second-stage loader. GL.iNet heavily customizes this to support their web-recovery UI and UBI container formats.
 - **UBI:** The main persistent storage pool, containing the OS kernel and root filesystem.
 
-- **Immutable Root:** The base root filesystem is mounted explicitly as a strictly read-only SquashFS block. We explicitly eliminate the OpenWrt `rootfs_data` UBIFS volume to guarantee absolute crypto-state purity. `sysupgrade.tar` with GL.iNet-specific metadata (`glinet,mt3000-snand`).
+- **Immutable Root:** The base root filesystem is mounted explicitly as a strictly read-only SquashFS block. We explicitly eliminate the OpenWrt `rootfs_data` UBIFS volume to guarantee absolute crypto-state purity.
+- **Sysupgrade Payload:** The deployment artifact must be packaged as a `sysupgrade.tar` with GL.iNet-specific metadata (`glinet,mt3000-snand`).
 
 ### 2. Device Tree (FDT) Dependencies
 The MT7981 requires highly specific FDT declarations for:
