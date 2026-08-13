@@ -13,21 +13,19 @@ MBSD is an experimental, minimalist OpenBSD port tailored specifically for the M
 
 ## 🛠 Target Architecture & Boot Flow
 
-Unlike standard Linux/OpenWrt deployments that rely on direct U-Boot to flat-image (uImage) kernel handoffs, MBSD follows the standard OpenBSD/arm64 boot protocol via EFI.
+Unlike standard Linux/OpenWrt deployments that rely on direct U-Boot to flat-image (`uImage`) kernel handoffs, MBSD follows the standard OpenBSD/arm64 boot protocol via EFI.
 
-```mermaid
-graph TD
-    A[Power On] --> B[ATF / BL2]
-    B --> C[U-Boot / FIP]
-    C -- U-Boot 'bootefi' --> D[Loads BOOTAA64.EFI]
-    D --> E[Launches bsd Kernel]
+```text
+[Power On] → [ATF (BL2)] → [U-Boot / FIP] → [U-Boot 'bootefi'] → [Loads BOOTAA64.EFI] → [Launches bsd Kernel]
 ```
 
-### Technical Specifications:
+### 🏛 Enterprise Architectural Specification
 
-*   **The EFI Layer:** OpenBSD/arm64 strictly requires an EFI environment to initialize the kernel. U-Boot’s native `bootefi` implementation is utilized to execute the OpenBSD EFI bootloader (`BOOTAA64.EFI`) directly from the SPI-NAND flash without modifying low-level manufacturer calibration partitions.
-*   **Storage & Immutability:** To ensure absolute edge-node integrity, MBSD is designed to run from a read-only root filesystem.
-*   **The KARL vs. Immutability Tradeoff:** Running a read-only rootFS restricts Kernel Address Randomized Link (KARL) from saving a newly linked kernel back to disk on shutdown. MBSD addresses this embedded constraint by utilizing a dedicated, isolated writable staging partition specifically for the kernel re-linker, or optionally falling back to a static RAMDISK kernel where cryptographic immutability takes precedence over boot-to-boot randomization.
+**Storage Tiering & State Retention**  
+MBSD enforces a rigorous partition between cryptographic immutability and runtime state execution. The base root filesystem (`/`) is mounted explicitly via `mount_rd(4)` as a strictly read-only RAMDISK block. All persistent state transitions are offloaded to isolated memory-backed tiers, ensuring that power-loss events result in a mathematically pure state wipe. 
+
+**Deterministic Deployment & Threat Modeling**  
+Traditional Linux edge distributions (e.g., OpenWrt) fall victim to "configuration drift" and runtime mutation, presenting an unacceptable attack surface for critical infrastructure. MBSD eliminates this threat vector through absolute determinism: configurations cannot be written to disk. The `sysctl(8)` parameters, network interface assignments, and routing daemons are injected deterministically at boot through cryptographically signed orchestration layers.
 
 ---
 
@@ -38,3 +36,12 @@ The project architecture relies on three primary subsystems (currently in design
 1.  **[blueshoes](../blueshoes) (State Engine):** A hardened execution runtime for running lightweight virtualized workloads and ensuring strict state synchronization.
 2.  **[omnia-playbook](../omnia-playbook) (Provisioning):** A zero-touch configuration utility designed for semantic node onboarding and automated cryptographic provisioning.
 3.  **[rheknel](../rheknel) (Telemetry):** A low-level hardware telemetry daemon mapping SPI-NAND wearing metrics, GMAC counters, and MT7976 radio states directly to userland.
+
+---
+
+## 🚀 Next-Gen Roadmap & TODO Pipeline
+
+*   `[ ]` **Multi-Kernel Evaluation:** Research NetBSD visualization vectors and alternative monolithic kerneling methods for resource-constrained MediaTek environments.
+*   `[ ]` **Autonomous Lifecycle Execution:** Architecture design for completely deleting the "human layer" in edge-node provisioning, deployment, and failure recovery.
+*   `[ ]` **Firmware Footprint Quantization:** Implement advanced static compilation and asset quantization techniques to reduce the overall memory and flash footprint of the MBSD base image.
+*   `[ ]` **Cognitive Assembly Onboarding:** Teach AGY (Autonomous General Intelligence/Agents) frameworks how to programmatically compile, build, and orchestrate MBSD nodes directly from bare-metal specifications.
