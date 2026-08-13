@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://timelabs.npo/schemas/mbsd/intent-v1.1.schema.json",
+  "title": "MBSD Auditor Intent Contract",
+  "description": "Machine-readable intent + governance for the MBSD auditor program. Extends the hardware/project metadata in docs/intent.json (commit 7464c8c) with the auditor_spec / owner / signatures blocks required by spec v1.1.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "project",
+    "auditor_spec",
+    "owner",
+    "signatures",
+    "updated_at"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "description": "Top-level schema version. Bump for backwards-incompatible changes.",
+      "type": "string",
+      "pattern": "^1\\.[0-9]+$"
+    },
+    "project": {
+      "description": "Project identifier (should match repo slug).",
+      "type": "string",
+      "minLength": 1
+    },
+
+    "auditor_spec": {
+      "description": "Pinned auditor spec version and its canonical sha256 hash (post-bootstrap $FH from auditor_spec_v1.1.md §12).",
+      "type": "object",
+      "required": ["version", "hash"],
+      "properties": {
+        "version": { "type": "string", "pattern": "^1\\.[0-9]+$" },
+        "hash":    { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+
+    "owner": {
+      "description": "Owner identity at Authority Level 2 (see spec §1).",
+      "type": "object",
+      "required": ["id", "pubkey_fingerprint"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "pubkey_fingerprint": {
+          "description": "Fingerprint of Owner's signing key (signify/ssh/gpg/secp256k1).",
+          "type": "string",
+          "minLength": 16
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "signatures": {
+      "description": "Signatures over the intent body (see validate_intent.sh). Minimally one Owner role required. Codex role required before A1-M scope elevation.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "sig", "algo"],
+        "properties": {
+          "role": { "type": "string", "enum": ["Owner", "Codex"] },
+          "sig":  { "type": "string", "minLength": 32 },
+          "algo": { "type": "string", "enum": ["ed25519", "secp256k1", "signify-ed25519"] }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "updated_at": {
+      "description": "ISO-8601 UTC timestamp of the last Owner-signed update.",
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "hardware": {
+      "description": "Hardware metadata carried forward from intent.json@7464c8c. Required when intent covers a specific hardware platform.",
+      "type": "object",
+      "required": ["soc", "board", "flashType"],
+      "properties": {
+        "soc":       { "type": "string" },
+        "board":     { "type": "string" },
+        "flashType": { "type": "string" },
+        "flashPart": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "boot": {
+      "type": "object",
+      "properties": {
+        "loader":   { "type": "string" },
+        "protocol": { "type": "string" },
+        "loadaddr": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "object",
+          "properties": {
+            "ports": { "type": "array", "items": { "type": "string" } },
+            "wifi":  { "type": "array", "items": { "type": "string" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "signing": {
+      "type": "object",
+      "properties": {
+        "algorithm":          { "type": "string" },
+        "pubkeyPath":         { "type": "string" },
+        "requiredBeforeBoot": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+
+    "governance": {
+      "type": "object",
+      "properties": {
+        "authorityRoot":                 { "type": "string" },
+        "approvalPrefix":                { "type": "string" },
+        "adrRequirement":                { "type": "boolean" },
+        "requiresOwnerApprovalBeforeFlash": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+
+    "success": {
+      "type": "object",
+      "properties": {
+        "criteria":    { "type": "array", "items": { "type": "string" } },
+        "bootSeconds": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "additionalProperties": false
+}

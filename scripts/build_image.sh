@@ -32,6 +32,18 @@ if [ ! -d "$IB_DIR" ]; then
     if [ ! -f "$IB_TAR" ]; then
         curl -L -o "$IB_TAR" "$IB_URL"
     fi
+    
+    echo "[*] Validating ImageBuilder SHA-256 checksum (CF-1 Mitigation)..."
+    EXPECTED_SHA256="1ba8bdf77664f382f994144779423a6cd0b6ad95a4fbd36de3f3c92281eb7b92"
+    ACTUAL_SHA256=$(shasum -a 256 "$IB_TAR" | awk '{print $1}')
+    if [ "$EXPECTED_SHA256" != "$ACTUAL_SHA256" ]; then
+        echo "[!] FATAL: ImageBuilder checksum mismatch!"
+        echo "Expected: $EXPECTED_SHA256"
+        echo "Got:      $ACTUAL_SHA256"
+        exit 1
+    fi
+    echo "[+] Checksum verified."
+
     echo "[*] Extracting ImageBuilder..."
     tar -xf "$IB_TAR" -C "$BUILD_DIR"
 fi

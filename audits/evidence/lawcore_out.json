@@ -1,0 +1,23 @@
+{
+  "spec_version": "1.1",
+  "clause_results": {
+    "§1_authority_ladder":        1,
+    "§2_amendment_lock":          1,
+    "§3_halt_semantics":          1,
+    "§4_newton_gate":             1,
+    "§5_poc_families":            1,
+    "§6_operating_rules":         1,
+    "§7_evidence_tiers":          1,
+    "§8_public_reporting":        1,
+    "§9_severity_triggers":       1,
+    "§10_repo_fit_profile":       1
+  },
+  "overall_pass":    1,
+  "severity":        "None",
+  "evidence_hashes": [
+    "sha256:aa6f70a42817624cc7805e21c749be949b4db4daf762f41c2c57990637a5291c",
+    "sha256:e09ba3c30fc85181d2ad007992e92d1abc1479e8b54e27ea5eaf39a55f116667",
+    "sha256:3c443f7e7ae2d93e56920150eea6f4cba330dfc2ecda03e22d12621be1a9c0c2"
+  ],
+  "timestamp": "2026-08-13T19:55:12Z"
+}
