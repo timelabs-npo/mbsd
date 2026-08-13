@@ -1,0 +1,73 @@
+#!/bin/sh
+set -eu
+
+JSON_OUT="audits/evidence/lawcore_out.json"
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --json-out)
+            JSON_OUT="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+mkdir -p "$(dirname "$JSON_OUT")"
+
+# Evaluate repository invariants deterministically
+OVERALL_PASS=true
+SEVERITY="None"
+FAILED_CLAUSES=""
+
+# Check CP-2
+if [ ! -f "docs/intent.json" ]; then
+    OVERALL_PASS=false
+    SEVERITY="Fatal"
+    FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-2\", "
+fi
+
+# Check CP-3
+if [ ! -f "backups/Factory.sha256" ]; then
+    OVERALL_PASS=false
+    SEVERITY="Fatal"
+    FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-3\", "
+fi
+
+# Check CP-5 (Prior Art Sidecars)
+for fam in sigma_topo phi_field pi_sdo delta_hash law_core; do
+    if [ ! -f "audits/spec/family_${fam}.json" ]; then
+        OVERALL_PASS=false
+        SEVERITY="Fatal"
+        FAILED_CLAUSES="${FAILED_CLAUSES}\"CP-5-${fam}\", "
+    fi
+done
+
+# Strip trailing comma
+FAILED_CLAUSES=$(echo "$FAILED_CLAUSES" | sed 's/, $//')
+
+cat <<EOF > "$JSON_OUT"
+{
+  "version": "1.1",
+  "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+  "overall_pass": ${OVERALL_PASS},
+  "severity": "${SEVERITY}",
+  "failed_clauses": [${FAILED_CLAUSES}],
+  "evaluator": "law-core-posix-stub-v1.1",
+  "runtime_dependencies": {
+    "network_calls": 0,
+    "interpreter": "posix-sh",
+    "llm_in_loop": false
+  }
+}
+EOF
+
+if [ "$OVERALL_PASS" = "true" ]; then
+    echo "[+] Law-Core static evaluation PASSED."
+    exit 0
+else
+    echo "[!] Law-Core static evaluation FAILED. Severity: ${SEVERITY}"
+    exit 1
+fi

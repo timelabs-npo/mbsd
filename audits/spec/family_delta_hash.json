@@ -1,0 +1,25 @@
+{
+  "family": "DELTA-HASH",
+  "inventory": [
+    {
+      "name": "TPM 2.0 PCR Hash Extensions (TCG Specification)",
+      "citation": "Trusted Computing Group, TPM 2.0 Library Specification (2019)"
+    },
+    {
+      "name": "Certificate Transparency Logs (RFC 6962 / RFC 9162 - Merkle Trees)",
+      "citation": "Laurie et al., IETF RFC 6962, DOI: 10.17487/RFC6962"
+    },
+    {
+      "name": "dm-verity (Linux Device-Mapper dm-verity)",
+      "citation": "Linux Kernel Documentation, Documentation/admin-guide/device-mapper/verity.rst"
+    },
+    {
+      "name": "Git Merkle DAG Architecture",
+      "citation": "Torvalds & Hamano, Git Version Control System (2005)"
+    },
+    {
+      "name": "Rekor (Sigstore Public Transparency Log)",
+      "citation": "Sigstore Architecture Documentation, Linux Foundation (2021)"
+    }
+  ]
+}

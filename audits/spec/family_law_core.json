@@ -1,0 +1,25 @@
+{
+  "family": "LAW-CORE",
+  "inventory": [
+    {
+      "name": "OPA (Open Policy Agent - Rego Engine)",
+      "citation": "Open Policy Agent Documentation, CNCF Graduated Project"
+    },
+    {
+      "name": "AWS IAM Access Analyzer (Z3 SMT Solver for Policies)",
+      "citation": "Backes et al., IEEE S&P 2018 (Zelkova / Tiros), DOI: 10.1109/SP.2018.00054"
+    },
+    {
+      "name": "SELinux / seedit Policy Compilers",
+      "citation": "Loscocco & Smalley, NSA Technical Report (2001)"
+    },
+    {
+      "name": "Coq / Lean 4 Formal Verification Systems",
+      "citation": "The Coq Development Team (Inria) / de Moura et al., CADE 2021 (Lean 4)"
+    },
+    {
+      "name": "Nix / Guix Functional Package Managers",
+      "citation": "Dolstra, PhD Thesis, Utrecht University (2006)"
+    }
+  ]
+}

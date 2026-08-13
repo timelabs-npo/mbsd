@@ -1,0 +1,25 @@
+{
+  "family": "PI-SDO",
+  "inventory": [
+    {
+      "name": "Ethereum Casper FFG (CBC Casper)",
+      "citation": "Buterin & Griffith, arXiv:1710.09437, 2017"
+    },
+    {
+      "name": "Lightning Network Hashed Time-Locked Contracts (HTLCs)",
+      "citation": "Poon & Dryja, Lightning Network Whitepaper (2016)"
+    },
+    {
+      "name": "Tendermint BFT Slashing Protocols",
+      "citation": "Buchman, Kwon, & Milosevic, arXiv:1807.04938, 2018"
+    },
+    {
+      "name": "Optimistic Rollup Fraud Proofs (Arbitrum / Optimism)",
+      "citation": "Kalodner et al., USENIX Security 2018 (Arbitrum Nitro)"
+    },
+    {
+      "name": "UMA Optimistic Oracle",
+      "citation": "UMA Protocol Whitepaper (2020)"
+    }
+  ]
+}

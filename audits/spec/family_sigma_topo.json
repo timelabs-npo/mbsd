@@ -1,0 +1,25 @@
+{
+  "family": "SIGMA-TOPO",
+  "inventory": [
+    {
+      "name": "OpenFlow / NOX / POX",
+      "citation": "McKeown et al., ACM CCR 2008, DOI: 10.1145/1355734.1355746"
+    },
+    {
+      "name": "BGP Route Flap Damping (RFC 2439 / RFC 7454)",
+      "citation": "Villamizar et al., IETF RFC 2439, DOI: 10.17487/RFC2439"
+    },
+    {
+      "name": "NetKAT / Frenetic SDN Verification",
+      "citation": "Anderson et al., ACM POPL 2014, DOI: 10.1145/2535838.2535862"
+    },
+    {
+      "name": "Spanning Tree Protocol (IEEE 802.1D / 802.1w RSTP)",
+      "citation": "IEEE Std 802.1D-2004, DOI: 10.1109/IEEESTD.2004.94569"
+    },
+    {
+      "name": "TRILL (Transparent Interconnection of Lots of Links - RFC 6325)",
+      "citation": "Perlman et al., IETF RFC 6325, DOI: 10.17487/RFC6325"
+    }
+  ]
+}

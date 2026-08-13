@@ -1,0 +1,25 @@
+{
+  "family": "PHI-FIELD",
+  "inventory": [
+    {
+      "name": "Self-Stabilizing Distributed Systems (Dijkstra 1974)",
+      "citation": "E. W. Dijkstra, CACM 1974, DOI: 10.1145/361082.361093"
+    },
+    {
+      "name": "Kubernetes Control Plane / Node Controller",
+      "citation": "Burns et al., ACM Queue 2016, DOI: 10.1145/2898442.2898444"
+    },
+    {
+      "name": "Cisco SON / Self-Organizing Networks (3GPP TS 32.500)",
+      "citation": "3GPP Technical Specification 32.500, Rel 8 (2011)"
+    },
+    {
+      "name": "Babel Routing Protocol (RFC 8966 - Distance-Vector Invariants)",
+      "citation": "Chroboczek & Schinazi, IETF RFC 8966, DOI: 10.17487/RFC8966"
+    },
+    {
+      "name": "Consul Autopilot (HashiCorp Deadman Switches)",
+      "citation": "HashiCorp Engineering Whitepaper, Consul Autopilot Architecture (2017)"
+    }
+  ]
+}

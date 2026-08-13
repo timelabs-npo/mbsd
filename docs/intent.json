@@ -53,12 +53,12 @@
         {
             "role": "Owner",
             "pubkey_fingerprint": "8d3e2f1a6c4b9d0e5f7a2c1b4e3d9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d",
-            "signature": "base64_encoded_signature_placeholder_owner"
+            "signature": ""
         },
         {
             "role": "Codex",
             "pubkey_fingerprint": "codex_9f8a6c5b4d3e2f1a0c9b8e7d6c5b4a3f2e1d8d3e2f1a6c4b9d0e5f7a2c1b",
-            "signature": "base64_encoded_signature_placeholder_codex"
+            "signature": ""
         }
     ]
 }
