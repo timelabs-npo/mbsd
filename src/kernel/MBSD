@@ -1,0 +1,115 @@
+# $OpenBSD: MBSD,v 1.0 2026/08/13 $
+
+machine		arm64
+maxusers	4
+
+option		PCIVERBOSE
+option		USBVERBOSE
+option		SMALL_KERNEL
+option		NO_PROPOLICE
+option		BOOT_CONFIG
+
+option		FONT_SPLEEN8x16
+option		FONT_SPLEEN12x24
+option		FONT_SPLEEN16x32
+
+option		RAMDISK_HOOKS
+option		MINIROOTSIZE=24576
+
+option		FFS
+option		FFS2
+option		MSDOSFS
+option		INET6
+option		EXT2FS
+option		NFSCLIENT
+option		CD9660
+option		UDF
+option		CRYPTO
+
+makeoptions	KERNEL_BASE_PHYS="0x00200000"
+makeoptions	KERNEL_BASE_VIRT="0xffffff8000200000"
+
+config		bsd	root on rd0a swap on rd0b
+
+# The main bus device
+mainbus0	at root
+softraid0	at root
+cpu0		at mainbus?
+efi0		at mainbus?
+smbios0		at efi?
+
+# ACPI and generic FDT
+acpi0		at mainbus?
+acpiec*		at acpi?
+acpimcfg*	at acpi?
+acpiiort*	at acpi?
+acpisectwo*	at acpi?
+smmu*		at acpiiort?
+acpipci*	at acpi?
+pci*		at acpipci?
+
+simplebus*	at fdt?
+
+# ARM Generic Core
+ampintc*	at fdt? early 1
+ampintcmsi*	at fdt? early 1
+agintc*		at fdt? early 1
+agintcmsi*	at fdt? early 1
+agtimer*	at fdt?
+smmu*		at fdt?
+
+# NS16550 compatible serial ports
+com*		at fdt?
+
+# Generic devices
+iicmux*		at fdt?
+iic*		at iicmux?
+pinctrl*	at fdt? early 1
+plgpio*		at fdt? early 1
+plrtc*		at fdt?
+pluart*		at fdt?
+psci*		at fdt? early 1
+pwmfan*		at fdt?
+scmi*		at fdt?
+syscon*		at fdt? early 1
+
+# Virtio for QEMU testing
+virtio*		at fdt?
+virtio*		at pci?
+vio*		at virtio?
+vioblk*		at virtio?
+viornd*		at virtio?
+vioscsi*	at virtio?
+viogpu*		at virtio?
+wsdisplay*	at viogpu?
+
+simplefb*	at fdt?
+wsdisplay*	at simplefb?
+
+# MediaTek SoCs
+mtintc*		at fdt?
+mtrng*		at fdt?
+mtxhci*		at fdt?
+usb*		at mtxhci?
+
+# USB bus support
+xhci*		at pci?
+xhci*		at fdt?
+usb*		at xhci?
+
+# USB Hubs & Mass storage
+uhub*		at usb?
+uhub*		at uhub?
+umass*		at uhub?
+uhidev*		at uhub?
+ukbd*		at uhidev?
+wskbd*		at ukbd? mux 1
+
+pseudo-device	loop 1
+pseudo-device	vlan
+pseudo-device	aggr
+pseudo-device	trunk
+pseudo-device	bpfilter 1
+pseudo-device	rd 1
+pseudo-device	bio 1
+pseudo-device	wsmux		2
