@@ -4,3 +4,4 @@
 
 # Ignore Mac OS files
 .DS_Store
+build_assets/
