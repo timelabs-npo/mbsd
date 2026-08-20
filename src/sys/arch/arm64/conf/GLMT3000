@@ -2,3 +2,4 @@ include "arch/arm64/conf/GENERIC"
 # Custom Beryl Overrides
 mtgmac* at fdt?
 mtspinand* at fdt?
+mtswitch* at fdt?

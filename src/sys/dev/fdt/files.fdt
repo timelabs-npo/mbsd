@@ -844,3 +844,6 @@ file    dev/fdt/if_mtgmac.c                 mtgmac
 device  mtspinand
 attach  mtspinand at fdt
 file    dev/fdt/mt_spinand.c                 mtspinand
+device  mtswitch
+attach  mtswitch at fdt
+file    dev/fdt/mt_switch.c                 mtswitch
