@@ -153,3 +153,41 @@ mtgmac_init_locked(struct mtgmac_softc *sc)
     
     printf("mtgmac: DMA forced online. Result overrides convention.\n");
 }
+
+/* 
+ * -----------------------------------------------------------------------------
+ * INTERRUPT HANDLING (IRQ via FDT)
+ * -----------------------------------------------------------------------------
+ */
+int
+mtgmac_intr(void *arg)
+{
+    struct mtgmac_softc *sc = arg;
+    uint32_t status;
+
+    /* Read interrupt status register (Placeholder offset 0x210) */
+    status = MTGMAC_READ(sc, 0x210);
+    if (status == 0)
+        return (0);
+
+    /* Acknowledge interrupts */
+    MTGMAC_WRITE(sc, 0x210, status);
+
+    /* TODO: Trigger RX/TX ring processing here */
+    
+    return (1);
+}
+
+void
+mtgmac_setup_irq(struct mtgmac_softc *sc, struct fdt_attach_args *faa)
+{
+    void *ih;
+
+    /* Establish interrupt handler via Device Tree */
+    ih = fdt_intr_establish(faa->fa_node, IPL_NET, mtgmac_intr, sc, sc->sc_dev.dv_xname);
+    if (ih == NULL) {
+        printf("%s: unable to establish interrupt\n", sc->sc_dev.dv_xname);
+        return;
+    }
+    printf("%s: interrupting at %s\n", sc->sc_dev.dv_xname, fdt_intr_string(faa->fa_node));
+}
