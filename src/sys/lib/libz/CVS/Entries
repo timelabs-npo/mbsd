@@ -1,0 +1,24 @@
+/Makefile/1.11/Sun Jun 30 18:17:10 2024//TOPENBSD_7_9
+/Makefile.inc/1.7/Mon Apr 29 01:02:28 2002//TOPENBSD_7_9
+/adler32.c/1.13/Tue Apr 25 16:59:57 2023//TOPENBSD_7_9
+/compress.c/1.6/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/crc32.c/1.21/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/crc32.h/1.5/Sun Oct 23 06:00:23 2022//TOPENBSD_7_9
+/deflate.c/1.24/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/deflate.h/1.15/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/infback.c/1.15/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/inffast.c/1.18/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/inffast.h/1.10/Tue Apr 25 16:59:57 2023//TOPENBSD_7_9
+/inffixed.h/1.7/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/inflate.c/1.29/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/inflate.h/1.7/Wed Mar 27 10:21:36 2024//TOPENBSD_7_9
+/inftrees.c/1.24/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/inftrees.h/1.15/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/trees.c/1.15/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/trees.h/1.4/Sun Oct 23 06:00:24 2022//TOPENBSD_7_9
+/zconf.h/1.28/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/zlib.h/1.35/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/zopenbsd.c/1.10/Thu Jul 22 16:40:20 2021//TOPENBSD_7_9
+/zutil.c/1.8/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+/zutil.h/1.35/Thu Apr 16 18:25:11 2026//TOPENBSD_7_9
+D

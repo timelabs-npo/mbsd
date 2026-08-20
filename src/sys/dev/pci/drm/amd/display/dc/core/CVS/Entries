@@ -1,0 +1,14 @@
+/amdgpu_dc.c/1.72/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc.c/1.1/Mon Mar  9 23:57:54 2026//TOPENBSD_7_9
+/dc_debug.c/1.7/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_hw_sequencer.c/1.13/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_link_enc_cfg.c/1.5/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_link_exports.c/1.4/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_resource.c/1.32/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_sink.c/1.5/Sun Jan  1 01:34:38 2023//TOPENBSD_7_9
+/dc_stat.c/1.5/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_state.c/1.2/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_stream.c/1.12/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_surface.c/1.9/Thu Apr 16 18:25:05 2026//TOPENBSD_7_9
+/dc_vm_helper.c/1.5/Fri Feb  7 03:03:11 2025//TOPENBSD_7_9
+D

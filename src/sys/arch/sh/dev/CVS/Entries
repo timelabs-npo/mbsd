@@ -1,0 +1,9 @@
+/pcicreg.h/1.1.1.1/Fri Oct  6 21:02:55 2006//TOPENBSD_7_9
+/pciide_machdep.c/1.2/Sat Aug  7 03:50:01 2010//TOPENBSD_7_9
+/scif.c/1.24/Tue Nov  5 18:58:59 2024//TOPENBSD_7_9
+/scifreg.h/1.2/Thu Mar 11 11:17:00 2021//TOPENBSD_7_9
+/scireg.h/1.1.1.1/Fri Oct  6 21:02:55 2006//TOPENBSD_7_9
+/shb.c/1.4/Tue Nov  5 18:58:59 2024//TOPENBSD_7_9
+/shpcic.c/1.15/Tue Nov  5 18:58:59 2024//TOPENBSD_7_9
+/shpcicvar.h/1.7/Wed May 22 14:25:47 2024//TOPENBSD_7_9
+D

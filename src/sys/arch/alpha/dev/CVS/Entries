@@ -1,0 +1,7 @@
+/bus_dma.c/1.38/Sun Jun 29 15:55:21 2025//TOPENBSD_7_9
+/sgmap_common.c/1.16/Sat Jun 28 16:04:09 2025//TOPENBSD_7_9
+/sgmap_typedep.c/1.15/Sun Apr 30 16:45:45 2017//TOPENBSD_7_9
+/sgmap_typedep.h/1.3/Thu Jun 26 05:42:08 2008//TOPENBSD_7_9
+/sgmapvar.h/1.7/Sat Jun 14 23:11:20 2014//TOPENBSD_7_9
+/shared_intr.c/1.23/Sat Jun 28 16:04:09 2025//TOPENBSD_7_9
+D

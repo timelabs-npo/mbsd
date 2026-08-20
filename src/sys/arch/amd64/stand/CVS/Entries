@@ -1,0 +1,14 @@
+D/biosboot////
+D/boot////
+D/cdboot////
+D/cdbr////
+D/efiboot////
+D/etc////
+D/fdboot////
+D/libsa////
+D/mbr////
+D/pxeboot////
+D/rdboot////
+D/vmboot////
+/Makefile/1.8/Thu Apr 16 18:24:56 2026//TOPENBSD_7_9
+/Makefile.inc/1.22/Wed Sep  6 01:47:36 2023//TOPENBSD_7_9

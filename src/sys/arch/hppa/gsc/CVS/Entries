@@ -1,0 +1,18 @@
+/arcofi_gsc.c/1.1/Wed Dec 21 23:12:03 2011//TOPENBSD_7_9
+/com_gsc.c/1.23/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/fdc_gsc.c/1.6/Sun Mar 13 08:04:38 2022//TOPENBSD_7_9
+/gscbus.c/1.32/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/gscbusvar.h/1.15/Mon May 14 13:54:39 2018//TOPENBSD_7_9
+/gsckbc.c/1.23/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/gsckbcreg.h/1.1/Fri Jan 31 22:50:19 2003//TOPENBSD_7_9
+/harmony.c/1.42/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/harmonyreg.h/1.5/Mon Jun  2 19:54:29 2003//TOPENBSD_7_9
+/harmonyvar.h/1.9/Mon Sep 19 06:46:43 2016//TOPENBSD_7_9
+/hil_gsc.c/1.6/Sun Mar 13 08:04:38 2022//TOPENBSD_7_9
+/if_ie_gsc.c/1.31/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/lpt_gsc.c/1.14/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/mongoose_gsc.c/1.2/Sun Mar 13 08:04:38 2022//TOPENBSD_7_9
+/oosiop_gsc.c/1.5/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/osiop_gsc.c/1.14/Sat Jun 28 13:24:21 2025//TOPENBSD_7_9
+/siop_gsc.c/1.6/Wed May 22 14:25:47 2024//TOPENBSD_7_9
+D

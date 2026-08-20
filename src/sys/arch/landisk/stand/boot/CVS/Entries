@@ -1,0 +1,10 @@
+/Makefile/1.18/Wed Aug 24 19:36:05 2022//TOPENBSD_7_9
+/boot.8/1.14/Tue Nov  5 09:42:48 2024//TOPENBSD_7_9
+/conf.c/1.18/Fri Sep  2 10:15:35 2022//TOPENBSD_7_9
+/delay.c/1.1/Fri Oct  6 21:48:50 2006//TOPENBSD_7_9
+/devs.c/1.13/Thu Feb 23 19:48:22 2023//TOPENBSD_7_9
+/getsecs.c/1.8/Thu Apr 13 02:19:04 2023//TOPENBSD_7_9
+/libsa.h/1.10/Thu Feb 23 19:48:22 2023//TOPENBSD_7_9
+/scifcons.c/1.6/Thu Jul 17 13:14:06 2014//TOPENBSD_7_9
+/srt0.S/1.6/Thu Dec  8 02:11:27 2022//TOPENBSD_7_9
+D

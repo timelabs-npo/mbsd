@@ -1,0 +1,7 @@
+/isa_machdep.c/1.15/Sat Jun 28 16:04:09 2025//TOPENBSD_7_9
+/isa_machdep.h/1.16/Sun Jun 29 15:55:21 2025//TOPENBSD_7_9
+/isadma_bounce.c/1.14/Sun Jun 29 15:55:21 2025//TOPENBSD_7_9
+/isapnp_machdep.c/1.5/Sat Jun 28 16:04:09 2025//TOPENBSD_7_9
+/isapnp_machdep.h/1.4/Thu Jun 26 05:42:08 2008//TOPENBSD_7_9
+/mcclock_isa.c/1.11/Sun Jun 29 15:55:21 2025//TOPENBSD_7_9
+D

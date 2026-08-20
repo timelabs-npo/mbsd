@@ -1,0 +1,13 @@
+/bootsect.h/1.8/Fri Aug  1 13:00:18 2025//TOPENBSD_7_9
+/bpb.h/1.7/Fri Oct 23 10:45:31 2015//TOPENBSD_7_9
+/denode.h/1.36/Mon Aug 15 01:47:09 2022//TOPENBSD_7_9
+/direntry.h/1.8/Thu Dec 23 02:12:52 2021//TOPENBSD_7_9
+/fat.h/1.13/Sun Jul 11 04:34:13 2021//TOPENBSD_7_9
+/msdosfs_conv.c/1.22/Thu Sep 12 09:07:28 2024//TOPENBSD_7_9
+/msdosfs_denode.c/1.68/Wed Mar  8 04:43:08 2023//TOPENBSD_7_9
+/msdosfs_fat.c/1.36/Fri Jun 16 08:42:08 2023//TOPENBSD_7_9
+/msdosfs_lookup.c/1.35/Tue Aug 23 20:37:16 2022//TOPENBSD_7_9
+/msdosfs_vfsops.c/1.99/Sat Sep 20 13:53:36 2025//TOPENBSD_7_9
+/msdosfs_vnops.c/1.143/Fri Oct 18 05:52:32 2024//TOPENBSD_7_9
+/msdosfsmount.h/1.23/Mon May 13 01:15:53 2024//TOPENBSD_7_9
+D
