@@ -17,6 +17,6 @@ if (-not (Test-Path -Path $outDir)) {
     New-Item -ItemType Directory -Path $outDir
 }
 
-docker run --rm -it -v "$($srcDir):/src" -v "$($outDir):/out" openbsd-builder
+docker run --rm -it -v "$($srcDir):/src" -v "$($outDir../../out" openbsd-builder
 
-Write-Host "Build finished. Check ../out/bsd"
+Write-Host "Build finished. Check ../../out/bsd"
