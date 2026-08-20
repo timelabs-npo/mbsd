@@ -13,3 +13,11 @@
 2. Formulated Token Economy Strategy.
 3. Preparing to fetch OpenBSD 7.6 `sys.tar.gz` to `src/sys`.
 4. Designing push mechanism (`scp`/`rsync`) to transfer compiled `bsd` kernel and artifacts to WD for U-Boot execution.
+
+## Entry 002: 2026-08-20 - GMAC Scaffolding
+**Objective:** Initialized `if_mtgmac.c` driver in OpenBSD kernel tree.
+**Actions:**
+1. Created `src/sys/dev/fdt/if_mtgmac.c`.
+2. Implemented `mtgmac_match` mapping to DTS `mediatek,mt7981-gmac`.
+3. Registered driver in `src/sys/dev/fdt/files.fdt`.
+4. Bypassed all prompts. Full throttle execution.

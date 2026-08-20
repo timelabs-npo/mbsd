@@ -836,3 +836,8 @@ file	dev/fdt/qcsdam.c		qcsdam
 device	tipd
 attach	tipd at i2c
 file	dev/fdt/tipd.c		tipd
+
+# MediaTek MT7981 Gigabit MAC
+device  mtgmac: ether, ifnet, mii, ifmedia
+attach  mtgmac at fdt
+file    dev/fdt/if_mtgmac.c                 mtgmac
