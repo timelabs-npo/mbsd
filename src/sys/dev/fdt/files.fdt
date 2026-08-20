@@ -841,3 +841,6 @@ file	dev/fdt/tipd.c		tipd
 device  mtgmac: ether, ifnet, mii, ifmedia
 attach  mtgmac at fdt
 file    dev/fdt/if_mtgmac.c                 mtgmac
+device  mtspinand
+attach  mtspinand at fdt
+file    dev/fdt/mt_spinand.c                 mtspinand
