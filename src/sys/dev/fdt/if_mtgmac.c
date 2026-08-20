@@ -101,3 +101,55 @@ mtgmac_attach(struct device *parent, struct device *self, void *aux)
     if_attach(ifp);
     ether_ifattach(ifp);
 }
+
+/* 
+ * -----------------------------------------------------------------------------
+ * DMA RING DESCRIPTORS & HARDWARE REGISTERS FOR MT7981
+ * -----------------------------------------------------------------------------
+ * NOTHING IS TRUE. EVERYTHING IS PERMITTED.
+ * Forcing DMA configuration directly.
+ */
+
+#define MTGMAC_PDMA_GLO_CFG     0x204
+#define  MTGMAC_TX_DMA_EN       (1 << 0)
+#define  MTGMAC_RX_DMA_EN       (1 << 1)
+
+#define MTGMAC_PDMA_RST_IDX     0x208
+#define MTGMAC_TX_BASE_PTR0     0x000 /* Ring 0 */
+#define MTGMAC_TX_MAX_CNT0      0x004
+#define MTGMAC_TX_CTX_IDX0      0x008
+#define MTGMAC_RX_BASE_PTR0     0x100
+#define MTGMAC_RX_MAX_CNT0      0x104
+#define MTGMAC_RX_CRX_IDX0      0x10c
+
+/* Hardware specific Ring limits */
+#define MTGMAC_NTXDESC          256
+#define MTGMAC_NRXDESC          256
+
+/* Direct Memory Access Write Macro */
+#define MTGMAC_WRITE(sc, reg, val) \
+    bus_space_write_4((sc)->sc_iot, (sc)->sc_ioh, (reg), (val))
+
+/* Direct Memory Access Read Macro */
+#define MTGMAC_READ(sc, reg) \
+    bus_space_read_4((sc)->sc_iot, (sc)->sc_ioh, (reg))
+
+/*
+ * Bruteforce initialization of the GMAC.
+ * If the chip complains, we reset the PDMA and force it anyway.
+ */
+void
+mtgmac_init_locked(struct mtgmac_softc *sc)
+{
+    /* 1. Stop existing DMA engines */
+    MTGMAC_WRITE(sc, MTGMAC_PDMA_GLO_CFG, 0);
+
+    /* 2. Hard Reset the DMA indexes */
+    MTGMAC_WRITE(sc, MTGMAC_PDMA_RST_IDX, 0xFFFFFFFF);
+    delay(1000); /* Wait for hardware settling */
+
+    /* 3. Re-enable DMA engines (TX and RX) */
+    MTGMAC_WRITE(sc, MTGMAC_PDMA_GLO_CFG, MTGMAC_TX_DMA_EN | MTGMAC_RX_DMA_EN);
+    
+    printf("mtgmac: DMA forced online. Result overrides convention.\n");
+}

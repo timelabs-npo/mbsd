@@ -21,3 +21,7 @@
 2. Implemented `mtgmac_match` mapping to DTS `mediatek,mt7981-gmac`.
 3. Registered driver in `src/sys/dev/fdt/files.fdt`.
 4. Bypassed all prompts. Full throttle execution.
+
+## Entry 003: 2026-08-20 - DMA Bruteforce Initialization
+**Objective:** Write the hardware register map and initialization sequence.
+**Reasoning:** Hardware datasheets are incomplete. We use direct `bus_space_write_4` macros to force the PDMA engine to stop, reset its indexes, and start again. Zero hesitation.
