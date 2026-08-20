@@ -11,11 +11,11 @@ sudo apt-get install -y qemu-system-aarch64 python3 python3-pexpect python3-pip 
 
 echo "Navigating to repository root..."
 # In WSL, C:\ is mapped to /mnt/c/
-cd /mnt/c/Users/root/mbsd/docker || exit 1
+cd /mnt/c/mbsd/docker || exit 1
 
 echo "Triggering the Kernel Forge (build_kernel.py)..."
 sudo python3 build_kernel.py
 
 echo "Build complete. Extracting payload..."
-cd /mnt/c/Users/root/mbsd/out
+cd /mnt/c/mbsd/out
 ls -la bsd
